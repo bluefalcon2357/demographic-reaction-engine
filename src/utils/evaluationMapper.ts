@@ -11,15 +11,7 @@ export function calculateAgentScore(agent: Agent, result: EvaluationResult): num
   const eduScore = result.education[agent.education]?.score ?? 0;
 
   // 2. Age Group (weight: 25%)
-  let ageKey: '18-34' | '35-54' | '55+' = '35-54';
-  if (agent.ageGroup === '18-24' || agent.ageGroup === '25-34') {
-    ageKey = '18-34';
-  } else if (agent.ageGroup === '35-44' || agent.ageGroup === '45-54') {
-    ageKey = '35-54';
-  } else {
-    ageKey = '55+';
-  }
-  const ageScore = result.ageGroup[ageKey]?.score ?? 0;
+  const ageScore = result.ageGroup[agent.ageGroup]?.score ?? 0;
 
   // 3. Regional culture & geography (weight: 20%)
   const regScore = result.region[agent.region]?.score ?? 0;
@@ -64,12 +56,8 @@ export function generateAgentQuote(agent: Agent, result: EvaluationResult, score
     return exactVerbatim.quote;
   }
 
-  // Otherwise, procedurally generate a response
-  const ageGroupKey: '18-34' | '35-54' | '55+' = (agent.ageGroup === '18-24' || agent.ageGroup === '25-34') ? '18-34' : 
-                     (agent.ageGroup === '35-44' || agent.ageGroup === '45-54') ? '35-54' : '55+';
-
   // Extract candidate concerns and benefits
-  const ageData = result.ageGroup[ageGroupKey];
+  const ageData = result.ageGroup[agent.ageGroup];
   const eduData = result.education[agent.education];
   const regData = result.region[agent.region];
   const genData = result.gender[agent.gender];

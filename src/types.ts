@@ -44,11 +44,14 @@ export interface EvaluationResult {
     winners: string; // segments that love it
     losers: string;  // segments that hate it
   };
-  // Segment-level evaluations — Nemotron-native dimensions only
+  // Segment-level evaluations across Nemotron-native and derived dimensions
   ageGroup: {
-    '18-34': DimensionEvaluation;
-    '35-54': DimensionEvaluation;
-    '55+': DimensionEvaluation;
+    '18-24': DimensionEvaluation;
+    '25-34': DimensionEvaluation;
+    '35-44': DimensionEvaluation;
+    '45-54': DimensionEvaluation;
+    '55-64': DimensionEvaluation;
+    '65+': DimensionEvaluation;
   };
   education: {
     'High School or less': DimensionEvaluation;
@@ -71,6 +74,31 @@ export interface EvaluationResult {
     'Married': DimensionEvaluation;
     'Divorced': DimensionEvaluation;
     'Widowed': DimensionEvaluation;
+    'Separated': DimensionEvaluation;
+  };
+  income: {
+    'Under $25K': DimensionEvaluation;
+    '$25K-$50K': DimensionEvaluation;
+    '$50K-$100K': DimensionEvaluation;
+    '$100K-$150K': DimensionEvaluation;
+    '$150K+': DimensionEvaluation;
+  };
+  occupationCategory: {
+    'Professional / Technical': DimensionEvaluation;
+    'Management / Business': DimensionEvaluation;
+    'Service': DimensionEvaluation;
+    'Sales / Office': DimensionEvaluation;
+    'Trades / Construction / Maintenance': DimensionEvaluation;
+    'Production / Transport': DimensionEvaluation;
+    'Not in Workforce / Retired': DimensionEvaluation;
+  };
+  ethnicity: {
+    'White': DimensionEvaluation;
+    'Black / African-American': DimensionEvaluation;
+    'Hispanic / Latino': DimensionEvaluation;
+    'Asian / Pacific Islander': DimensionEvaluation;
+    'Native American': DimensionEvaluation;
+    'Multiracial / Other': DimensionEvaluation;
   };
   verbatims: VerbatimQuote[];
 }

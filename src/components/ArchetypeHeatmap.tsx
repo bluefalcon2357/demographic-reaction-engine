@@ -88,13 +88,7 @@ export const ArchetypeHeatmap: React.FC<ArchetypeHeatmapProps> = ({ agents, agen
 
     // Collate segment definitions for benefits/concerns to display contextually
     const extractSourceDetails = (dimType: DimensionType, val: string) => {
-      if (dimType === 'ageGroup') {
-        let ageKey: '18-34' | '35-54' | '55+' = '35-54';
-        if (val === '18-24' || val === '25-34') ageKey = '18-34';
-        else if (val === '35-44' || val === '45-54') ageKey = '35-54';
-        else ageKey = '55+';
-        return result.ageGroup[ageKey];
-      }
+      if (dimType === 'ageGroup') return result.ageGroup[val as keyof typeof result.ageGroup];
       if (dimType === 'education') return result.education[val as keyof typeof result.education];
       if (dimType === 'region') return result.region[val as keyof typeof result.region];
       if (dimType === 'gender') return result.gender[val as keyof typeof result.gender];

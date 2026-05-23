@@ -67,11 +67,14 @@ const responseSchema = {
     ageGroup: {
       type: Type.OBJECT,
       properties: {
-        '18-34': dimensionSchema,
-        '35-54': dimensionSchema,
-        '55+': dimensionSchema
+        '18-24': dimensionSchema,
+        '25-34': dimensionSchema,
+        '35-44': dimensionSchema,
+        '45-54': dimensionSchema,
+        '55-64': dimensionSchema,
+        '65+': dimensionSchema
       },
-      required: ['18-34', '35-54', '55+']
+      required: ['18-24', '25-34', '35-44', '45-54', '55-64', '65+']
     },
     education: {
       type: Type.OBJECT,
@@ -107,9 +110,46 @@ const responseSchema = {
         'Single': dimensionSchema,
         'Married': dimensionSchema,
         'Divorced': dimensionSchema,
-        'Widowed': dimensionSchema
+        'Widowed': dimensionSchema,
+        'Separated': dimensionSchema
       },
-      required: ['Single', 'Married', 'Divorced', 'Widowed']
+      required: ['Single', 'Married', 'Divorced', 'Widowed', 'Separated']
+    },
+    income: {
+      type: Type.OBJECT,
+      properties: {
+        'Under $25K': dimensionSchema,
+        '$25K-$50K': dimensionSchema,
+        '$50K-$100K': dimensionSchema,
+        '$100K-$150K': dimensionSchema,
+        '$150K+': dimensionSchema
+      },
+      required: ['Under $25K', '$25K-$50K', '$50K-$100K', '$100K-$150K', '$150K+']
+    },
+    occupationCategory: {
+      type: Type.OBJECT,
+      properties: {
+        'Professional / Technical': dimensionSchema,
+        'Management / Business': dimensionSchema,
+        'Service': dimensionSchema,
+        'Sales / Office': dimensionSchema,
+        'Trades / Construction / Maintenance': dimensionSchema,
+        'Production / Transport': dimensionSchema,
+        'Not in Workforce / Retired': dimensionSchema
+      },
+      required: ['Professional / Technical', 'Management / Business', 'Service', 'Sales / Office', 'Trades / Construction / Maintenance', 'Production / Transport', 'Not in Workforce / Retired']
+    },
+    ethnicity: {
+      type: Type.OBJECT,
+      properties: {
+        'White': dimensionSchema,
+        'Black / African-American': dimensionSchema,
+        'Hispanic / Latino': dimensionSchema,
+        'Asian / Pacific Islander': dimensionSchema,
+        'Native American': dimensionSchema,
+        'Multiracial / Other': dimensionSchema
+      },
+      required: ['White', 'Black / African-American', 'Hispanic / Latino', 'Asian / Pacific Islander', 'Native American', 'Multiracial / Other']
     },
     verbatims: {
       type: Type.ARRAY,
@@ -130,7 +170,7 @@ const responseSchema = {
       description: "Provide exactly 12 to 14 highly diverse, realistic individual quotes representing distinct profiles from different regions, classes, and backgrounds."
     }
   },
-  required: ["pitch", "tagline", "category", "synthesis", "ageGroup", "education", "region", "gender", "maritalStatus", "verbatims"]
+  required: ["pitch", "tagline", "category", "synthesis", "ageGroup", "education", "region", "gender", "maritalStatus", "income", "occupationCategory", "ethnicity", "verbatims"]
 };
 
 // Helper function to extract and fetch URL content
@@ -244,12 +284,15 @@ ATTENTION: Realize that some external domains might block scraping or serve CAPT
 IMPORTANT RULE FOR EXTRACTED PITCH RESPONSE:
 The returning JSON 'pitch' property MUST be an elegant, concise 1-2 sentence descriptive summary explaining the exact website/product/channel/policy that was analysed (e.g., "Apple Vision Pro Spatial VR Headset listed on Amazon targeting premium entertainment consumers" or "YouTube video reviewing Devin AI, evaluating its impact on professional coders") rather than repeating raw HTML or URL links. Do NOT return raw HTML inside the returning JSON fields.` : ""}
 
-For this subject, simulate the reaction of these segments based on the demographic dimensions available in the Nemotron dataset (age, education, region, gender, marital status) and assign scores from -100 (Strongly Hate / Oppose) to 100 (Strongly Love / Favor). Maintain high demographic realism:
+For this subject, simulate the reaction of these segments across ALL of the demographic dimensions in the response schema (age group, education, region, gender, marital status, income bracket, occupation category, ethnicity) and assign scores from -100 (Strongly Hate / Oppose) to 100 (Strongly Love / Favor). Maintain high demographic realism:
 - Highly educated or urban folks focus on efficiency, advanced technical capability, premium quality.
 - Less educated or rural folks focus on affordability, inflation concerns, practical utility, traditional values.
-- Different ages prioritize sustainability and tech (younger) vs security and traditional usage (older).
+- Different ages prioritize sustainability and tech (younger) vs security and traditional usage (older). Use the six Nemotron age buckets (18-24, 25-34, 35-44, 45-54, 55-64, 65+) — do not collapse them.
 - Regional differences reflect economic realities: Northeast (finance, tech), Midwest (manufacturing, agriculture), South (energy, military, religion), West (tech, innovation, environment).
-- Marital status influences priorities: married people focus on family stability and long-term value, single people on personal growth and flexibility, divorced/widowed on financial security.
+- Marital status influences priorities: married people focus on family stability and long-term value, single people on personal growth and flexibility, divorced/widowed/separated on financial security and rebuilding.
+- Income brackets reflect economic exposure: Under $25K and $25K-$50K segments are highly price-sensitive and skeptical of premium/luxury framing; $50K-$100K is the value-conscious middle; $100K-$150K and $150K+ have more discretionary appetite and respond to quality, status, and forward-looking value.
+- Occupation categories shape lived experience: Professional/Technical and Management/Business workers think in terms of productivity, ROI, and abstract systems; Service, Trades, and Production/Transport workers evaluate via on-the-job practicality, physical impact, and labor-market effects; Sales/Office workers weigh both customer-facing and operational angles; Not in Workforce/Retired prioritize fixed-income stability, healthcare, and intergenerational concerns.
+- Ethnicity shapes cultural framing and trust: reason about how the subject lands for White, Black/African-American, Hispanic/Latino, Asian/Pacific Islander, Native American, and Multiracial/Other audiences based on historical experience, community values, and representation — avoid stereotypes and reflect genuine intra-group diversity in concerns and benefits.
 
 Provide an in-depth analysis. You MUST output your response exactly conforming to the JSON schema. Explain the reasons and generate highly authentic individual human quotes (verbatims) reflecting these views. Let's think step by step.`;
 

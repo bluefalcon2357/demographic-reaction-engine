@@ -4,8 +4,6 @@ Test how the US population would react to a startup pitch, ad headline, product 
 
 Submit any copy or URL and the app returns a population-scale reaction: an overall stance score, per-segment breakdowns across five demographic dimensions, a histogram of where individual agents land on the support/oppose spectrum, a heatmap of demographic archetypes, raw verbatim quotes, and a browsable directory of every simulated agent and their personal score.
 
-View the hosted app on AI Studio: https://ai.studio/apps/b127578e-d8ac-43b2-97e9-b208ead7367c
-
 ## How it works
 
 1. **Persona pool** — On startup the frontend loads the 13,354 personas shipped in [src/data/nemotron-agents.json](src/data/nemotron-agents.json) (a working-age sample drawn from the Nemotron dimensions; see [Dataset manipulations](#dataset-manipulations) below). You pick a subset size (100 up to the full pool) at simulation time.
