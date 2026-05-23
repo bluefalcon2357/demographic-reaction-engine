@@ -1,0 +1,6 @@
+{
+  "name": "Demographic Reaction Engine",
+  "description": "A population-scale simulation of 1,000 diverse agents reacting to copy, pitches, products, and proposals based on the NVIDIA Nemotron-Personas-USA dataset.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
