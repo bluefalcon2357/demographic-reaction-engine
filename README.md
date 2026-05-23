@@ -8,7 +8,7 @@ View the hosted app on AI Studio: https://ai.studio/apps/b127578e-d8ac-43b2-97e9
 
 ## How it works
 
-1. **Persona pool** — On startup the frontend loads up to 20,000 personas from [src/data/nemotron-agents.json](src/data/nemotron-agents.json) (sampled to be balanced across the Nemotron dimensions). You pick a subset size (100–20,000) at simulation time.
+1. **Persona pool** — On startup the frontend loads the 13,354 personas shipped in [src/data/nemotron-agents.json](src/data/nemotron-agents.json) (a working-age sample drawn from the Nemotron dimensions; see [Dataset manipulations](#dataset-manipulations) below). You pick a subset size (100 up to the full pool) at simulation time.
 2. **Pitch submission** — You paste copy or a URL into the input console. If a URL is detected, [server.ts](server.ts) scrapes the page title, meta description, and stripped body text (up to 2 URLs, 6s timeout each) and feeds the extracted context into the Gemini prompt.
 3. **Segmented reaction** — The server calls Gemini with a strict JSON response schema covering five Nemotron-native dimensions (age group, education, region, gender, marital status). For each segment Gemini returns a stance score from -100 to +100, plus 2–3 concerns and 2–3 benefits. It also returns an overall synthesis (winners, losers, key takeaway) and 12–14 verbatim quotes from invented individuals.
 4. **Per-agent scoring** — [src/utils/evaluationMapper.ts](src/utils/evaluationMapper.ts) collapses the segment scores into a single number per agent using a weighted blend (education 30%, age 25%, region 20%, gender 15%, marital status 10%) plus a deterministic per-agent variance derived from the agent ID, so the same agent always lands in roughly the same place across reloads.
@@ -138,5 +138,5 @@ Agents with `occupation` = `"Not in Workforce"` or `"No Occupation"` are matched
 ## Troubleshooting
 
 - **`GEMINI_API_KEY environment variable is required`** — Make sure you created a `.env` file (not `.env.local`) in the project root and that `npm run dev` was restarted after the change.
-- **Port 3000 already in use** — Stop the other process or edit the `PORT` constant in [server.ts](server.ts).
+- **Port 3000 already in use** — Stop the other process or run with a different port via the `PORT` env var (e.g. `PORT=4000 npm run dev`), which [server.ts](server.ts) reads from `process.env.PORT`.
 - **URL scraping returns empty content** — Some sites block bots; the model is instructed to fall back to its own world knowledge using the URL path, brand patterns, or video ID when scraping fails.
