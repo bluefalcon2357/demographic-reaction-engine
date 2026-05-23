@@ -6,7 +6,8 @@
       "Bash(/tmp/pptx-venv/bin/pip install *)",
       "Bash(node -e \"const data = require\\('./src/data/nemotron-agents.json'\\); console.log\\('Total agents:', data.length\\); console.log\\('Min age:', Math.min\\(...data.map\\(d=>d.age\\)\\)\\); console.log\\('Max age:', Math.max\\(...data.map\\(d=>d.age\\)\\)\\);\")",
       "Bash(/tmp/pptx-venv/bin/python /tmp/build_pptx.py)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(python3)"
     ],
     "additionalDirectories": [
       "/tmp",

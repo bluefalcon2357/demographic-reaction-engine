@@ -1,9 +1,44 @@
 import { Agent, EvaluationResult } from '../types';
 
+export type IncomeBracket = keyof EvaluationResult['income'];
+export type OccupationCategory = keyof EvaluationResult['occupationCategory'];
+export type Ethnicity = keyof EvaluationResult['ethnicity'];
+
+export function incomeBracketOf(agent: Agent): IncomeBracket {
+  const income = agent.income ?? 0;
+  if (income < 25000) return 'Under $25K';
+  if (income < 50000) return '$25K-$50K';
+  if (income < 100000) return '$50K-$100K';
+  if (income < 150000) return '$100K-$150K';
+  return '$150K+';
+}
+
+export function occupationCategoryOf(agent: Agent): OccupationCategory {
+  const o = (agent.occupation || '').toLowerCase();
+  if (/(retired|not in workforce|unemployed|homemaker|student)/.test(o)) return 'Not in Workforce / Retired';
+  if (/(manager|director|executive|chief|administrator|owner|supervisor|principal)/.test(o)) return 'Management / Business';
+  if (/(engineer|scientist|developer|programmer|analyst|architect|nurse|physician|doctor|teacher|professor|lawyer|accountant|designer|researcher|technician|therapist|pharmacist|consultant|auditor|paralegal|social worker|librarian|journalist|editor|artist|musician)/.test(o)) return 'Professional / Technical';
+  if (/(electrician|plumber|carpenter|mechanic|installer|repair|construction|maintenance|painter|welder|hvac|roofer|mason|technician helper|locksmith|firefighter|fire captain)/.test(o)) return 'Trades / Construction / Maintenance';
+  if (/(driver|operator|production|assembler|machinist|truck|delivery|warehouse|laborer|factory|miner|packer|forklift|courier|conductor|pilot|sailor)/.test(o)) return 'Production / Transport';
+  if (/(cashier|sales|retail|clerk|secretary|office|receptionist|telemarketer|customer service|bank teller|broker)/.test(o)) return 'Sales / Office';
+  if (/(server|cook|chef|janitor|cleaner|barista|waiter|waitress|food|hairdresser|barber|childcare|home health|security guard|aide|attendant|housekeeper|caregiver|usher|bartender)/.test(o)) return 'Service';
+  return 'Professional / Technical';
+}
+
+export function ethnicityOf(agent: Agent): Ethnicity {
+  const bg = (agent.culturalBackground || '').toLowerCase();
+  if (/(african[- ]american|black\b|afro[- ])/.test(bg)) return 'Black / African-American';
+  if (/(hispanic|latino|latina|mexican|puerto rican|cuban|dominican|salvadoran|guatemalan|colombian|chicano|central american|south american)/.test(bg)) return 'Hispanic / Latino';
+  if (/(asian|chinese|japanese|korean|vietnamese|filipino|indian-american|south asian|pakistani|bangladeshi|hmong|cambodian|thai|pacific islander|hawaiian|samoan|tongan)/.test(bg)) return 'Asian / Pacific Islander';
+  if (/(native american|navajo|cherokee|sioux|apache|hopi|lakota|pueblo|indigenous|first nations|tribal|ute\b)/.test(bg)) return 'Native American';
+  if (/(multiracial|biracial|mixed[- ]race|multi-ethnic|mixed heritage)/.test(bg)) return 'Multiracial / Other';
+  return 'White';
+}
+
 /**
  * Calculates a high-fidelity, customized stance score for an individual agent
  * based on the multi-dimensional demographic evaluation results from Gemini.
- * 
+ *
  * Uses 5 Nemotron-native dimensions weighted by their typical impact on opinion formation.
  */
 export function calculateAgentScore(agent: Agent, result: EvaluationResult): number {

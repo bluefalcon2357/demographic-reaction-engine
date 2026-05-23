@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Agent, EvaluationResult } from '../types';
 import { Layers, ChevronRight, UserPlus, HelpCircle } from 'lucide-react';
-import { generateAgentQuote } from '../utils/evaluationMapper';
+import { generateAgentQuote, incomeBracketOf, occupationCategoryOf, ethnicityOf } from '../utils/evaluationMapper';
 
 interface ArchetypeHeatmapProps {
   agents: Agent[];
@@ -9,14 +9,17 @@ interface ArchetypeHeatmapProps {
   result: EvaluationResult;
 }
 
-type DimensionType = 'gender' | 'ageGroup' | 'education' | 'region' | 'maritalStatus';
+type DimensionType = 'gender' | 'ageGroup' | 'education' | 'region' | 'maritalStatus' | 'income' | 'occupationCategory' | 'ethnicity';
 
 const dimensionLabels: Record<DimensionType, string> = {
   gender: 'Gender',
   ageGroup: 'Age Group',
   education: 'Education Level',
   region: 'Geographic Region',
-  maritalStatus: 'Marital Status'
+  maritalStatus: 'Marital Status',
+  income: 'Income Bracket',
+  occupationCategory: 'Occupation Category',
+  ethnicity: 'Ethnicity'
 };
 
 const dimensionOptions: Record<DimensionType, string[]> = {
@@ -24,8 +27,18 @@ const dimensionOptions: Record<DimensionType, string[]> = {
   ageGroup: ['18-24', '25-34', '35-44', '45-54', '55-64', '65+'],
   education: ['High School or less', 'Some College / Associate', 'Bachelor\'s Degree', 'Postgraduate / Advanced'],
   region: ['Northeast', 'Midwest', 'South', 'West'],
-  maritalStatus: ['Single', 'Married', 'Divorced', 'Widowed', 'Separated']
+  maritalStatus: ['Single', 'Married', 'Divorced', 'Widowed', 'Separated'],
+  income: ['Under $25K', '$25K-$50K', '$50K-$100K', '$100K-$150K', '$150K+'],
+  occupationCategory: ['Professional / Technical', 'Management / Business', 'Service', 'Sales / Office', 'Trades / Construction / Maintenance', 'Production / Transport', 'Not in Workforce / Retired'],
+  ethnicity: ['White', 'Black / African-American', 'Hispanic / Latino', 'Asian / Pacific Islander', 'Native American', 'Multiracial / Other']
 };
+
+function dimensionValueOf(agent: Agent, dim: DimensionType): string {
+  if (dim === 'income') return incomeBracketOf(agent);
+  if (dim === 'occupationCategory') return occupationCategoryOf(agent);
+  if (dim === 'ethnicity') return ethnicityOf(agent);
+  return agent[dim] as string;
+}
 
 export const ArchetypeHeatmap: React.FC<ArchetypeHeatmapProps> = ({ agents, agentScores, result }) => {
   const [rowDim, setRowDim] = useState<DimensionType>('education');
@@ -48,8 +61,8 @@ export const ArchetypeHeatmap: React.FC<ArchetypeHeatmapProps> = ({ agents, agen
     });
 
     agents.forEach(agent => {
-      const rVal = agent[rowDim] as string;
-      const cVal = agent[colDim] as string;
+      const rVal = dimensionValueOf(agent, rowDim);
+      const cVal = dimensionValueOf(agent, colDim);
       const score = agentScores[agent.id] ?? 0;
 
       // Safe checks in case of custom mapping anomalies
@@ -93,6 +106,9 @@ export const ArchetypeHeatmap: React.FC<ArchetypeHeatmapProps> = ({ agents, agen
       if (dimType === 'region') return result.region[val as keyof typeof result.region];
       if (dimType === 'gender') return result.gender[val as keyof typeof result.gender];
       if (dimType === 'maritalStatus') return result.maritalStatus[val as keyof typeof result.maritalStatus];
+      if (dimType === 'income') return result.income[val as keyof typeof result.income];
+      if (dimType === 'occupationCategory') return result.occupationCategory[val as keyof typeof result.occupationCategory];
+      if (dimType === 'ethnicity') return result.ethnicity[val as keyof typeof result.ethnicity];
       return null;
     };
 

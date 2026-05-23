@@ -14,6 +14,7 @@ export interface Agent {
   culturalBackground: string; // Nemotron cultural_background narrative
   professionalPersona: string; // Nemotron professional_persona narrative
   statement: string; // Brief bio statement
+  income: number; // Annual income in USD
 }
 
 export interface DimensionEvaluation {
